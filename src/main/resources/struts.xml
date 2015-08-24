@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC  
+    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"  
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
+
+<struts>
+	<constant name="struts.i18n.encoding" value="utf-8"></constant>
+	<constant name="struts.multipart.maxSize" value="20971520" />
+	<constant name="struts.devMode" value="true" />
+
+	<package name="qifun" namespace="/" extends="struts-default">
+		<default-action-ref name="error"></default-action-ref>
+		<global-results>
+			<result name="false">/WEB-INF/error.jsp</result>
+		</global-results>
+		<action name="login" class="com.qifun.actions.servlet.LoginServlet" method="login">
+			<result name="success">/WEB-INF/index.jsp</result>
+		</action>
+		<action name="queryaction" class="com.qifun.actions.servlet.DispatchServlet" method="queryaction">
+			<result name="success">/WEB-INF/index.jsp</result>
+		</action>
+		<action name="modifyaction" class="com.qifun.actions.servlet.DispatchServlet" method="modifyaction">
+			<result name="success">/WEB-INF/index.jsp</result>
+		</action>
+		<action name="modifySql" class="com.qifun.actions.servlet.DispatchServlet" method="modifySql">
+			<result name="success">/WEB-INF/index.jsp</result>
+		</action>
+		<action name="modifytb" class="com.qifun.actions.servlet.DispatchServlet" method="modifytb">
+			<result name="success">/WEB-INF/index.jsp</result>
+		</action>
+		<action name="modifyfinal" class="com.qifun.actions.servlet.DispatchServlet" method="modifyfinal">
+			<result name="success">/WEB-INF/index.jsp</result>
+		</action>
+		<action name="delaction" class="com.qifun.actions.servlet.DispatchServlet" method="delaction">
+			<result name="success">/WEB-INF/index.jsp</result>
+		</action>
+		<action name="delsql" class="com.qifun.actions.servlet.DispatchServlet" method="delsql">
+			<result name="success">/WEB-INF/index.jsp</result>
+		</action>
+		<action name="deltb" class="com.qifun.actions.servlet.DispatchServlet" method="deltb">
+			<result name="success">/WEB-INF/index.jsp</result>
+		</action>
+		<action name="delfinal" class="com.qifun.actions.servlet.DispatchServlet" method="delfinal">
+			<result name="success">/WEB-INF/index.jsp</result>
+		</action>
+		<action name="addpage" class="com.qifun.actions.servlet.DispatchServlet" method="addpage">
+			<result name="success">/WEB-INF/add.jsp</result>
+		</action>
+		<action name="addactionaction" class="com.qifun.actions.servlet.DispatchServlet" method="addactionaction">
+			<result name="success">/WEB-INF/index.jsp</result>
+		</action>
+		<action name="addSql" class="com.qifun.actions.servlet.DispatchServlet" method="addsql">
+			<result name="success">/WEB-INF/index.jsp</result>
+		</action>
+		<action name="addtb" class="com.qifun.actions.servlet.DispatchServlet" method="addtb">
+			<result name="success">/WEB-INF/index.jsp</result>
+		</action>
+		<action name="addfinal" class="com.qifun.actions.servlet.DispatchServlet" method="addfinal">
+			<result name="success">/WEB-INF/index.jsp</result>
+		</action>
+		<action name="error">
+			<result>/WEB-INF/error.jsp</result>
+		</action>
+	</package>
+
+</struts>  
