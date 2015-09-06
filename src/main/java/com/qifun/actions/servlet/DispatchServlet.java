@@ -9,7 +9,6 @@ import java.util.List;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
-import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
@@ -21,6 +20,7 @@ import com.opensymphony.xwork2.ActionSupport;
 import com.qifun.actions.dao.ActionsDao;
 import com.qifun.actions.dao.impl.ActionsDaoImpl;
 import com.qifun.actions.model.ActionModel;
+import com.qifun.actions.model.TemplateModel;
 import com.qifun.actions.utils.DataSource;
 
 public class DispatchServlet extends ActionSupport {
@@ -35,6 +35,7 @@ public class DispatchServlet extends ActionSupport {
 	private String actonSelect;
 	private List<ActionModel> actionList;
 	private List<ActionModel> actionNameList;
+	private List<TemplateModel> templateList;
 
 	private String actionNme;
 	private String period;
@@ -81,6 +82,33 @@ public class DispatchServlet extends ActionSupport {
 	private String addfinalurl;
 	private String addfinalfinalTable;
 	private String addfinalfinalSql;
+	
+	private String templateId;
+	private String isTemplate;
+
+	public String getIsTemplate() {
+		return isTemplate;
+	}
+
+	public void setIsTemplate(String isTemplate) {
+		this.isTemplate = isTemplate;
+	}
+
+	public String getTemplateId() {
+		return templateId;
+	}
+
+	public void setTemplateId(String templateId) {
+		this.templateId = templateId;
+	}
+
+	public List<TemplateModel> getTemplateList() {
+		return templateList;
+	}
+
+	public void setTemplateList(List<TemplateModel> templateList) {
+		this.templateList = templateList;
+	}
 
 	public String getAddfinalexeOrder() {
 		return addfinalexeOrder;
@@ -428,7 +456,7 @@ public class DispatchServlet extends ActionSupport {
 		if (actionsDao.mofifyActionsInfo(actionNme, period, step, gameId,
 				worldId, accountType)) {
 			actionNameList = actionsDao.getActionsInfo();
-			actionList = new ArrayList<ActionModel>();
+			actionList = actionsDao.getActionsInfoByName(actionNme);
 			return "success";
 		}
 		return "false";
@@ -439,7 +467,7 @@ public class DispatchServlet extends ActionSupport {
 		if (actionsDao
 				.modifySql(sqlId, sqlExeOrder, sqltempTable, sqlActionSql)) {
 			actionNameList = actionsDao.getActionsInfo();
-			actionList = new ArrayList<ActionModel>();
+			actionList = actionsDao.getActionsInfoByName(currentactionname);
 			return "success";
 		}
 		return "false";
@@ -449,7 +477,7 @@ public class DispatchServlet extends ActionSupport {
 		ActionsDao actionsDao = new ActionsDaoImpl();
 		if (actionsDao.modifytb(tbId, tbExeOrder, tbActionTable)) {
 			actionNameList = actionsDao.getActionsInfo();
-			actionList = new ArrayList<ActionModel>();
+			actionList = actionsDao.getActionsInfoByName(currentactionname);
 			return "success";
 		}
 		return "false";
@@ -460,7 +488,7 @@ public class DispatchServlet extends ActionSupport {
 		if (actionsDao.modifyfinal(finalId, finalExeOrder, finalURL,
 				finalFinalTable, finalFinalSql)) {
 			actionNameList = actionsDao.getActionsInfo();
-			actionList = new ArrayList<ActionModel>();
+			actionList = actionsDao.getActionsInfoByName(currentactionname);
 			return "success";
 		}
 		return "false";
@@ -480,7 +508,7 @@ public class DispatchServlet extends ActionSupport {
 		ActionsDao actionsDao = new ActionsDaoImpl();
 		if (actionsDao.delsql(delsqlid)) {
 			actionNameList = actionsDao.getActionsInfo();
-			actionList = new ArrayList<ActionModel>();
+			actionList = actionsDao.getActionsInfoByName(currentactionname);
 			return "success";
 		}
 		return "false";
@@ -490,7 +518,7 @@ public class DispatchServlet extends ActionSupport {
 		ActionsDao actionsDao = new ActionsDaoImpl();
 		if (actionsDao.deltb(deltbid)) {
 			actionNameList = actionsDao.getActionsInfo();
-			actionList = new ArrayList<ActionModel>();
+			actionList = actionsDao.getActionsInfoByName(currentactionname);
 			return "success";
 		}
 		return "false";
@@ -500,13 +528,15 @@ public class DispatchServlet extends ActionSupport {
 		ActionsDao actionsDao = new ActionsDaoImpl();
 		if (actionsDao.delfinal(delfinalid)) {
 			actionNameList = actionsDao.getActionsInfo();
-			actionList = new ArrayList<ActionModel>();
+			actionList = actionsDao.getActionsInfoByName(currentactionname);
 			return "success";
 		}
 		return "false";
 	}
 
 	public String addpage() {
+		ActionsDao actionsDao = new ActionsDaoImpl();
+		templateList = actionsDao.getTemplates();
 		return "success";
 	}
 
@@ -514,8 +544,13 @@ public class DispatchServlet extends ActionSupport {
 		ActionsDao actionsDao = new ActionsDaoImpl();
 		if (actionsDao.addaction(addName, addPeriod, addStep, addGameId,
 				addWorldId, addAccountType)) {
+			if("1".equals(isTemplate)){
+				boolean add = actionsDao.addTemplate(addPeriod, addStep, addGameId,
+						addWorldId, addAccountType);
+				if(!add) return "false";
+			}
 			actionNameList = actionsDao.getActionsInfo();
-			actionList = new ArrayList<ActionModel>();
+			actionList = actionsDao.getActionsInfoByName(addName);
 			return "success";
 		}
 		return "false";
@@ -526,7 +561,7 @@ public class DispatchServlet extends ActionSupport {
 		if (actionsDao.addsql(currentactionname, addsqlExeOrder,
 				addsqltempTable, addsqlActionSql)) {
 			actionNameList = actionsDao.getActionsInfo();
-			actionList = new ArrayList<ActionModel>();
+			actionList = actionsDao.getActionsInfoByName(currentactionname);
 			return "success";
 		}
 		return "false";
@@ -537,7 +572,7 @@ public class DispatchServlet extends ActionSupport {
 		if (actionsDao
 				.addtb(currentactionname, addtbexeOrder, addtbactionTable)) {
 			actionNameList = actionsDao.getActionsInfo();
-			actionList = new ArrayList<ActionModel>();
+			actionList = actionsDao.getActionsInfoByName(currentactionname);
 			return "success";
 		}
 		return "false";
@@ -548,7 +583,25 @@ public class DispatchServlet extends ActionSupport {
 		if (actionsDao.addfinal(currentactionname, addfinalexeOrder,
 				addfinalurl, addfinalfinalTable, addfinalfinalSql)) {
 			actionNameList = actionsDao.getActionsInfo();
-			actionList = new ArrayList<ActionModel>();
+			actionList = actionsDao.getActionsInfoByName(currentactionname);
+			return "success";
+		}
+		return "false";
+	}
+	
+	public String modifyTemplate(){
+		ActionsDao actionsDao = new ActionsDaoImpl();
+		if(actionsDao.modifyTemplate(templateId, period, step, gameId, worldId, accountType)){
+			templateList = actionsDao.getTemplates();
+			return "success";
+		}
+		return "false";
+	}
+	
+	public String delTemplate(){
+		ActionsDao actionsDao = new ActionsDaoImpl();
+		if(actionsDao.delTemplate(templateId)){
+			templateList = actionsDao.getTemplates();
 			return "success";
 		}
 		return "false";

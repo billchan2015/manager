@@ -49,6 +49,12 @@
 		<action name="addactionaction" class="com.qifun.actions.servlet.DispatchServlet" method="addactionaction">
 			<result name="success">/WEB-INF/index.jsp</result>
 		</action>
+		<action name="modifyTemplate" class="com.qifun.actions.servlet.DispatchServlet" method="modifyTemplate">
+			<result name="success">/WEB-INF/add.jsp</result>
+		</action>
+		<action name="delTemplate" class="com.qifun.actions.servlet.DispatchServlet" method="delTemplate">
+			<result name="success">/WEB-INF/add.jsp</result>
+		</action>
 		<action name="addSql" class="com.qifun.actions.servlet.DispatchServlet" method="addsql">
 			<result name="success">/WEB-INF/index.jsp</result>
 		</action>
@@ -58,6 +64,7 @@
 		<action name="addfinal" class="com.qifun.actions.servlet.DispatchServlet" method="addfinal">
 			<result name="success">/WEB-INF/index.jsp</result>
 		</action>
+		
 		<action name="error">
 			<result>/WEB-INF/error.jsp</result>
 		</action>

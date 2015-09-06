@@ -15,6 +15,7 @@ import com.qifun.actions.model.ActionModel;
 import com.qifun.actions.model.FinalModel;
 import com.qifun.actions.model.SQLModel;
 import com.qifun.actions.model.TableModel;
+import com.qifun.actions.model.TemplateModel;
 import com.qifun.actions.utils.DataSource;
 
 public class ActionsDaoImpl implements ActionsDao {
@@ -361,7 +362,7 @@ public class ActionsDaoImpl implements ActionsDao {
 		try {
 			conn = DataSource.getInstance().getConnection();
 			ps = conn
-					.prepareStatement("UPDATE t_action_info SET iPeriod = ?,iStep=?,iGameId=?,iWorldId=?,iAccountType=?'WHERE vActionName=?");
+					.prepareStatement("UPDATE t_action_info SET iPeriod = ?,iStep=?,iGameId=?,iWorldId=?,iAccountType=? WHERE vActionName=?");
 			ps.setString(1, period);
 			ps.setString(2, step);
 			ps.setString(3, gameId);
@@ -863,6 +864,171 @@ public class ActionsDaoImpl implements ActionsDao {
 					conn.close();
 				} catch (Exception e2) {
 					log.error("addfinal Exception : " + e2.getMessage());
+				}
+			}
+		}
+		return result;
+	}
+
+	public List<TemplateModel> getTemplates() {
+		List<TemplateModel> templateList = new ArrayList<TemplateModel>();
+
+		Connection conn = null;
+		Statement st = null;
+		ResultSet rs = null;
+		try {
+			conn = DataSource.getInstance().getConnection();
+			st = conn.createStatement();
+			rs = st.executeQuery("SELECT * FROM t_template_info");
+			while (rs.next()) {
+				TemplateModel templateModel = new TemplateModel();
+				templateModel.setId(rs.getString("id"));
+				templateModel.setPeriod(rs.getString("iPeriod"));
+				templateModel.setStep(rs.getString("iStep"));
+				templateModel.setGameId(rs.getString("iGameId"));
+				templateModel.setWorldId(rs.getString("iWorldId"));
+				templateModel.setAccountType(rs.getString("iAccountType"));
+				templateList.add(templateModel);
+			}
+		} catch (Exception e) {
+			log.error("getTemplateModels Exception : ", e);
+		} finally {
+			if (rs != null) {
+				try {
+					rs.close();
+				} catch (Exception e2) {
+					log.error("getTemplateModels Exception : ", e2);
+				}
+			}
+			if (st != null) {
+				try {
+					st.close();
+				} catch (Exception e2) {
+					log.error("getTemplateModels Exception : ", e2);
+				}
+			}
+			if (conn != null) {
+				try {
+					conn.close();
+				} catch (Exception e2) {
+					log.error("getTemplateModels Exception : ", e2);
+				}
+			}
+		}
+
+		return templateList;
+	}
+
+	public boolean addTemplate(String addperiod, String addstep,
+			String addgameId, String addworldId, String addaccountType) {
+		boolean result = false;
+		Connection conn = null;
+		PreparedStatement ps = null;
+		int rs = -1;
+		try {
+			conn = DataSource.getInstance().getConnection();
+			ps = conn.prepareStatement("INSERT INTO t_template_info(iPeriod,iStep,iGameId,iWorldId,iAccountType)VALUES(?,?,?,?,?)");
+			ps.setString(1, addperiod);
+			ps.setString(2, addstep);
+			ps.setString(3, addgameId);
+			ps.setString(4, addworldId);
+			ps.setString(5, addaccountType);
+			rs = ps.executeUpdate();
+			if (rs > 0) {
+				result = true;
+			}
+		} catch (Exception e) {
+			log.error("addTemplate Exception : " + e.getMessage());
+		} finally {
+			if (ps != null) {
+				try {
+					ps.close();
+				} catch (Exception e2) {
+					log.error("addTemplate Exception : " + e2.getMessage());
+				}
+			}
+			if (conn != null) {
+				try {
+					conn.close();
+				} catch (Exception e2) {
+					log.error("addTemplate Exception : " + e2.getMessage());
+				}
+			}
+		}
+		return result;
+	}
+
+	public boolean modifyTemplate(String templateId, String period,
+			String step, String gameId, String worldId, String accountType) {
+		boolean result = false;
+		Connection conn = null;
+		PreparedStatement ps = null;
+		int rs = -1;
+		try {
+			conn = DataSource.getInstance().getConnection();
+			ps = conn
+					.prepareStatement("UPDATE t_template_info SET iPeriod = ?,iStep=?,iGameId=?,iWorldId=?,iAccountType=? WHERE id=?");
+			ps.setString(1, period);
+			ps.setString(2, step);
+			ps.setString(3, gameId);
+			ps.setString(4, worldId);
+			ps.setString(5, accountType);
+			ps.setString(6, templateId);
+			rs = ps.executeUpdate();
+			if (rs > 0) {
+				result = true;
+			}
+		} catch (Exception e) {
+			log.error("modifyTemplate Exception : " + e.getMessage());
+		} finally {
+			if (ps != null) {
+				try {
+					ps.close();
+				} catch (Exception e2) {
+					log.error("modifyTemplate Exception : "
+							+ e2.getMessage());
+				}
+			}
+			if (conn != null) {
+				try {
+					conn.close();
+				} catch (Exception e2) {
+					log.error("modifyTemplate Exception : "
+							+ e2.getMessage());
+				}
+			}
+		}
+		return result;
+	}
+
+	public boolean delTemplate(String templateId) {
+		boolean result = false;
+		Connection conn = null;
+		Statement st = null;
+		int rs = -1;
+		try {
+			conn = DataSource.getInstance().getConnection();
+			st = conn.createStatement();
+			rs = st.executeUpdate("DELETE FROM t_template_info WHERE id = "
+					+ templateId);
+			if (rs > 0) {
+				result = true;
+			}
+		} catch (Exception e) {
+			log.error("delTemplate Exception : " + e.getMessage());
+		} finally {
+			if (st != null) {
+				try {
+					st.close();
+				} catch (Exception e2) {
+					log.error("delTemplate Exception : " + e2.getMessage());
+				}
+			}
+			if (conn != null) {
+				try {
+					conn.close();
+				} catch (Exception e2) {
+					log.error("delTemplate Exception : " + e2.getMessage());
 				}
 			}
 		}

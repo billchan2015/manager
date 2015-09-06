@@ -47,6 +47,7 @@ public class DataSource {
 			comboPooledDataSource.setAcquireIncrement(5);
 			comboPooledDataSource.setMaxPoolSize(20);
 			comboPooledDataSource.setMaxStatements(180);
+			comboPooledDataSource.setTestConnectionOnCheckin(true);
 		} catch (Exception e) {
 			log.error("DataSource Exception : ", e);
 		}

@@ -3,6 +3,7 @@ package com.qifun.actions.dao;
 import java.util.List;
 
 import com.qifun.actions.model.ActionModel;
+import com.qifun.actions.model.TemplateModel;
 
 public interface ActionsDao {
 	public boolean checkUser(String username, String passwd);
@@ -45,5 +46,15 @@ public interface ActionsDao {
 	public boolean addfinal(String actionName, String addfinalexeOrder,
 			String addfinalurl, String addfinalfinalTable,
 			String addfinalfinalSql);
+
+	public List<TemplateModel> getTemplates();
+
+	public boolean addTemplate(String addperiod, String addstep,
+			String addgameId, String addworldId, String addaccountType);
+	
+	public boolean modifyTemplate(String templateId, String period,
+			String step, String gameId, String worldId, String accountType);
+	
+	public boolean delTemplate(String templateId);
 
 }
