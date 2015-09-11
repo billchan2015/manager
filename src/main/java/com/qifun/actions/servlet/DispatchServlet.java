@@ -20,6 +20,9 @@ import com.opensymphony.xwork2.ActionSupport;
 import com.qifun.actions.dao.ActionsDao;
 import com.qifun.actions.dao.impl.ActionsDaoImpl;
 import com.qifun.actions.model.ActionModel;
+import com.qifun.actions.model.FinalModel;
+import com.qifun.actions.model.SQLModel;
+import com.qifun.actions.model.TableModel;
 import com.qifun.actions.model.TemplateModel;
 import com.qifun.actions.utils.DataSource;
 
@@ -36,6 +39,52 @@ public class DispatchServlet extends ActionSupport {
 	private List<ActionModel> actionList;
 	private List<ActionModel> actionNameList;
 	private List<TemplateModel> templateList;
+	
+	private List<SQLModel> addSqlList;
+	public List<SQLModel> getAddSqlList() {
+		return addSqlList;
+	}
+	public void setAddSqlList(List<SQLModel> addSqlList) {
+		this.addSqlList = addSqlList;
+	}
+	
+	private List<SQLModel> modifySqlList;
+	public List<SQLModel> getModifySqlList() {
+		return modifySqlList;
+	}
+	public void setModifySqlList(List<SQLModel> modifySqlList) {
+		this.modifySqlList = modifySqlList;
+	}
+	
+	private List<TableModel> addTbList;
+	public List<TableModel> getAddTbList() {
+		return addTbList;
+	}
+	public void setAddTbList(List<TableModel> addTbList) {
+		this.addTbList = addTbList;
+	}
+	private List<TableModel> modifyTbList;
+	public List<TableModel> getModifyTbList() {
+		return modifyTbList;
+	}
+	public void setModifyTbList(List<TableModel> modifyTbList) {
+		this.modifyTbList = modifyTbList;
+	}
+	
+	private List<FinalModel> addFinalList;
+	public List<FinalModel> getAddFinalList() {
+		return addFinalList;
+	}
+	public void setAddFinalList(List<FinalModel> addFinalList) {
+		this.addFinalList = addFinalList;
+	}
+	private List<FinalModel> modifyFinalList;
+	public List<FinalModel> getModifyFinalList() {
+		return modifyFinalList;
+	}
+	public void setModifyFinalList(List<FinalModel> modifyFinalList) {
+		this.modifyFinalList = modifyFinalList;
+	}
 
 	private String actionNme;
 	private String period;
@@ -542,13 +591,19 @@ public class DispatchServlet extends ActionSupport {
 
 	public String addactionaction() {
 		ActionsDao actionsDao = new ActionsDaoImpl();
+		if(addName==null||"".equals(addName)){
+			log.error("add actionname null!");
+			return "false";
+		}
 		if (actionsDao.addaction(addName, addPeriod, addStep, addGameId,
 				addWorldId, addAccountType)) {
+			/**
+			 * Ä£°æÌí¼Ó
 			if("1".equals(isTemplate)){
 				boolean add = actionsDao.addTemplate(addPeriod, addStep, addGameId,
 						addWorldId, addAccountType);
 				if(!add) return "false";
-			}
+			}**/
 			actionNameList = actionsDao.getActionsInfo();
 			actionList = actionsDao.getActionsInfoByName(addName);
 			return "success";
@@ -557,7 +612,34 @@ public class DispatchServlet extends ActionSupport {
 	}
 
 	public String addsql() {
-		ActionsDao actionsDao = new ActionsDaoImpl();
+		try {
+			ActionsDao actionsDao = new ActionsDaoImpl();
+			if(!(addSqlList==null||addSqlList.size()<=0)){
+				for(SQLModel sqlModel:addSqlList){
+					if(!actionsDao.addsql(currentactionname, String.valueOf(sqlModel.getExeOrder()),
+							sqlModel.getTempTable(), sqlModel.getActionSql())){
+						System.out.println(currentactionname +" addsql failed");
+					}
+				}
+			}
+			if(!(modifySqlList==null||modifySqlList.size()<=0)){
+				for(SQLModel sqlModel:modifySqlList){
+					if(!actionsDao.modifySql(String.valueOf(sqlModel.getId()), String.valueOf(sqlModel.getExeOrder()), sqlModel.getTempTable(), sqlModel.getActionSql())){
+						System.out.println(currentactionname +" modifySql failed");
+					}
+				}
+			}
+			actionNameList = actionsDao.getActionsInfo();
+			actionList = actionsDao.getActionsInfoByName(currentactionname);
+			return "success";
+		} catch (Exception e) {
+			System.out.println(currentactionname +" Exception");
+			e.printStackTrace();
+			return "false";
+		}
+		
+		
+		/**
 		if (actionsDao.addsql(currentactionname, addsqlExeOrder,
 				addsqltempTable, addsqlActionSql)) {
 			actionNameList = actionsDao.getActionsInfo();
@@ -565,10 +647,36 @@ public class DispatchServlet extends ActionSupport {
 			return "success";
 		}
 		return "false";
+		**/
 	}
 
 	public String addtb() {
-		ActionsDao actionsDao = new ActionsDaoImpl();
+		try {
+			ActionsDao actionsDao = new ActionsDaoImpl();
+			if(!(addTbList==null||addTbList.size()<=0)){
+				for(TableModel tableModel:addTbList){
+					if(!actionsDao.addtb(currentactionname,String.valueOf(tableModel.getExeOrder()) ,tableModel.getActionTable())){
+						System.out.println(currentactionname +" addtb failed!");
+					}
+				}
+			}
+			if(!(modifyTbList==null||modifyTbList.size()<=0)){
+				for(TableModel tableModel:modifyTbList){
+					if(!actionsDao.modifytb(String.valueOf(tableModel.getId()),String.valueOf(tableModel.getExeOrder()), tableModel.getActionTable())){
+						System.out.println(currentactionname +" modifytb failed!");
+					}
+				}
+			}
+			actionNameList = actionsDao.getActionsInfo();
+			actionList = actionsDao.getActionsInfoByName(currentactionname);
+			return "success";
+		} catch (Exception e) {
+			System.out.println(currentactionname +" Exception");
+			e.printStackTrace();
+			return "false";
+		}
+		
+		/**
 		if (actionsDao
 				.addtb(currentactionname, addtbexeOrder, addtbactionTable)) {
 			actionNameList = actionsDao.getActionsInfo();
@@ -576,10 +684,37 @@ public class DispatchServlet extends ActionSupport {
 			return "success";
 		}
 		return "false";
+		**/
 	}
 
 	public String addfinal() {
-		ActionsDao actionsDao = new ActionsDaoImpl();
+		try {
+			ActionsDao actionsDao = new ActionsDaoImpl();
+			if(!(addFinalList==null||addFinalList.size()<=0)){
+				for(FinalModel finalModel:addFinalList){
+					if(!actionsDao.addfinal(currentactionname, String.valueOf(finalModel.getExeOrder()), finalModel.getUrl(), finalModel.getFinalTable(), finalModel.getFinalSql())){
+						System.out.println(currentactionname +" addfinal failed!");
+					}
+				}
+			}
+			if(!(modifyFinalList==null||modifyFinalList.size()<=0)){
+				for(FinalModel finalModel:modifyFinalList){
+					if(!actionsDao.modifyfinal(String.valueOf(finalModel.getId()), String.valueOf(finalModel.getExeOrder()), finalModel.getUrl(), finalModel.getFinalTable(), finalModel.getFinalSql())){
+						System.out.println(currentactionname +" modifytb failed!");
+					}
+				}
+			}
+			actionNameList = actionsDao.getActionsInfo();
+			actionList = actionsDao.getActionsInfoByName(currentactionname);
+			return "success";
+		} catch (Exception e) {
+			System.out.println(currentactionname +" Exception");
+			e.printStackTrace();
+			return "false";
+		}
+		
+		
+		/**
 		if (actionsDao.addfinal(currentactionname, addfinalexeOrder,
 				addfinalurl, addfinalfinalTable, addfinalfinalSql)) {
 			actionNameList = actionsDao.getActionsInfo();
@@ -587,6 +722,7 @@ public class DispatchServlet extends ActionSupport {
 			return "success";
 		}
 		return "false";
+		**/
 	}
 	
 	public String modifyTemplate(){

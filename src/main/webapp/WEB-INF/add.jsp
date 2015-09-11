@@ -17,17 +17,12 @@
 		gameId:<input type="text" name="addGameId" />
 		worldId:<input type="text" name="addWorldId" />
 		accountType:<input type="text" name="addAccountType" /><br><br>
-		是否添加为模版:<s:select list="#{o:'false',1:'true'}" id="isTemplate" name="isTemplate" label="是否添加为模版" listKey="key" listValue="value" theme="simple"/>&nbsp;
-		<input type="submit" value="确定添加" />
+		<s:select cssStyle="visibility: hidden;display: none;" list="#{o:'false',1:'true'}" id="isTemplate" name="isTemplate" label="是否添加为模版" listKey="key" listValue="value" theme="simple"/>&nbsp;
+		<input type="submit" value="确定添加" />&nbsp;<a href="http://localhost:8080/manager/login.action">返回</a>
 	</s:form><br>
 	<div style="margin-left: auto;margin-right: auto;width: 750px">
-	<table style="text-align:left;">
-	<tr><td>Tips:</td></tr>
-	<tr><td>*添加action时可同时将action设置为模版，在下拉单中选择true，并提交</td></tr>
-	<tr><td>*使用模版添加action时先填写actionName，然后在模版表中点击对应模版《使用》按钮</td></tr>
-	</table>
 	</div>
-	<p>模版表</p>
+	<p>公共表</p>
 	<table style="margin:auto;border:solid 1px;color: black;text-align:center;width: 1400px;background-color:DarkGray;">
 		<tr><td style="display: none;"></td><td>period</td><td>step</td><td>gameId</td><td>worldId</td><td>accountType</td><td>操作</td></tr>
 		<s:iterator value="templateList" var="template">
@@ -38,7 +33,7 @@
 			<td><textarea><s:property value="#template.gameId"></s:property></textarea></td>
 			<td><textarea><s:property value="#template.worldId"></s:property></textarea></td>
 			<td><textarea><s:property value="#template.accountType"></s:property></textarea></td>
-			<td><input type="button" value="使用" onclick="use(this)"><input type="button" value="保存" onclick="modify(this)"><input type="button" value="删除" onclick="del(this)"></td>
+			<td><input type="button" value="保存" onclick="modify(this)"></td>
 		</tr>
 		</s:iterator>
 	</table>

@@ -1,6 +1,7 @@
 package com.qifun.actions.dao.impl;
 
 import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
@@ -687,21 +688,6 @@ public class ActionsDaoImpl implements ActionsDao {
 			ps.setString(5, addworldId);
 			ps.setString(6, addaccountType);
 			rs = ps.executeUpdate();
-			// st = conn.createStatement();
-			// rs =
-			// st.executeUpdate("INSERT INTO t_action_info(vActionName,iPeriod,iStep,iGameId,iWorldId,iAccountType)VALUES('"
-			// + actionName
-			// + "','"
-			// + addperiod
-			// + "','"
-			// + addstep
-			// + "','"
-			// + addgameId
-			// + "','"
-			// + addworldId
-			// + "','"
-			// + addaccountType
-			// + "')");
 			if (rs > 0) {
 				result = true;
 			}
@@ -1033,5 +1019,28 @@ public class ActionsDaoImpl implements ActionsDao {
 			}
 		}
 		return result;
+	}
+	
+	public static void main(String[] args) {
+		try {
+			Connection conn = null;
+			PreparedStatement ps = null;
+				Class.forName("com.mysql.jdbc.Driver");
+				conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/mysql?useUnicode=true&characterEncoding=utf-8&autoReconnect=true&failOverReadOnly=false","root", "");
+				ps = conn.prepareStatement("INSERT INTO t_template_info(iPeriod,iStep,iGameId,iWorldId,iAccountType)VALUES(?,?,?,?,?)");
+				ps.setString(1, "tttttsssss");
+				ps.setString(2, null);
+				ps.setString(3, null);
+				ps.setString(4, null);
+				ps.setString(5, null);
+				int i = ps.executeUpdate();
+				if (i > 0) {
+					System.out.println("--->"+i);
+				}
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
+		
 	}
 }
